@@ -12,7 +12,7 @@ jobs:
   convert_json_to_yaml:
     runs-on: ubuntu-latest
     steps:
-      - uses: fabasoad/data-format-converter-action@v0
+      - uses: fabasoad/data-format-converter-action@main
         id: json2yaml
         with:
           input: "./src/ValentinGuigon_CV.json"
