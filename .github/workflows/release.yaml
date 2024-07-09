@@ -5,15 +5,8 @@ on:
     branches:
       - main # Replace with your main branch name or use '*' for all branches
 
-permissions:
-  contents: write
-
 jobs:
   convert_json_to_yaml:
-    name: Convert JSON to YAML
-    runs-on: ubuntu-latest
-    steps:
-      - name: Call Convert Workflow
-        uses: ./.github/workflows/convert.yaml
-        with:
-          github_token: ${{ secrets.RELEASE_CV_TOKEN }}
+    uses: ./.github/workflows/convert.yaml
+    secrets:
+      token: ${{ secrets.RELEASE_CV_TOKEN }}
