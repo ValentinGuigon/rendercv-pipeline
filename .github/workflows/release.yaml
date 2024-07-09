@@ -9,46 +9,31 @@ permissions:
   contents: write
 
 jobs:
-  converter:
+  convert_json_to_yaml:
     name: Converter
+    uses: ./.github/workflows/convert.yaml
+
+  call_rendercv_workflow:
+    name: RenderCV
+    needs: convert_json_to_yaml
+    uses: ./.github/workflows/rendercv.yaml
+
+  build:
+    needs: call_rendercv_workflow
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Ensure src directory exists
-        run: mkdir -p ./src
-
-      - name: Convert JSON to YAML
-        uses: fabasoad/data-format-converter-action@v0
-        id: json2yaml
+      - name: Download RenderCV Output
+        uses: actions/download-artifact@v4
         with:
-          input: "./src/ValentinGuigon_CV.json"
-          from: "json"
-          to: "yaml"
-
-      - name: Save YAML to File
-        run: echo "${{ steps.json2yaml.outputs.output }}" > ./src/ValentinGuigon_CV.yaml
-
-      - name: Verify YAML file
-        run: ls -l ./src/ValentinGuigon_CV.yaml # Check if the ValentinGuigon_CV.yaml file exists and its details
-
-      - name: Commit files
-        id: commit
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "github-actions"
-          git add --all
-          if [-z "$(git status --porcelain)"]; then
-             echo "::set-output name=push::false"
-          else
-             git commit -m "Add changes" -a
-             echo "::set-output name=push::true"
-          fi
-        shell: bash
-
-      - name: Push changes
-        if: steps.commit.outputs.push == 'true'
-        uses: ad-m/github-push-action@master
+          name: RenderCV Output
+          path: rendercv_output
+      - name: Release
+        uses: softprops/action-gh-release@v2
         with:
-          github_token: ${{ secrets.RELEASE_CV_TOKEN }}
+          files: |
+            rendercv_output/*_CV.pdf
+            rendercv_output/*_CV.tex
+          generate_release_notes: true
+          make_latest: true
