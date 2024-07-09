@@ -9,11 +9,57 @@ permissions:
   contents: write
 
 jobs:
-  convert_json_to_yaml:
-    name: Converter
-    uses: ./.github/workflows/convert.yaml
-
-  call_rendercv_workflow:
+  rendercv:
     name: RenderCV
-    needs: convert_json_to_yaml
-    uses: ./.github/workflows/rendercv.yaml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install RenderCV
+        run: |
+          pip install -r requirements.txt
+      - name: RenderCV
+        run: |
+          cd src
+          cv_file=$(find .  -maxdepth 1 -type f -name "*_CV.yaml" | head -n 1)
+          if [ -z "$cv_file" ]; then
+            echo "No RenderCV file found!"
+            exit 1
+          fi
+          cd ..
+          rendercv render src/$cv_file --pdf-path ${cv_file%.yaml}.pdf --markdown-path README.md --latex-path ${cv_file%.yaml}.tex
+      - name: Upload rendercv_output as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RenderCV Output
+          path: rendercv_output
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          base: HEAD
+          filters: |
+            cv:
+              - '*_CV.tex'
+              - 'README.md'
+
+      - name: Commit files
+        id: commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions"
+          git add --all
+          if [-z "$(git status --porcelain)"]; then
+             echo "::set-output name=push::false"
+          else
+             git commit -m "Add changes" -a
+             echo "::set-output name=push::true"
+          fi
+        shell: bash
+
+      - name: Push changes
+        if: steps.commit.outputs.push == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.RELEASE_CV_TOKEN }}
