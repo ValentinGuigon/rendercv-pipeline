@@ -9,55 +9,6 @@ permissions:
   contents: write
 
 jobs:
-  converter:
+  convert_json_to_yaml:
     name: Converter
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Ensure src directory exists
-        run: mkdir -p ./src
-
-      - name: Check if ValentinGuigon_CV.yaml exists and delete it
-        run: |
-          if [ -f ./src/ValentinGuigon_CV.yaml ]; then
-            rm ./src/ValentinGuigon_CV.yaml
-            echo "Existing ValentinGuigon_CV.yaml file deleted."
-          else
-            echo "No existing ValentinGuigon_CV.yaml file found."
-          fi
-
-      - name: Convert JSON to YAML
-        uses: fabasoad/data-format-converter-action@v0
-        id: json2yaml
-        with:
-          input: "./src/ValentinGuigon_CV.json"
-          from: "json"
-          to: "yaml"
-
-      - name: Save YAML to File
-        run: echo "${{ steps.json2yaml.outputs.output }}" > ./src/ValentinGuigon_CV.yaml
-
-      - name: Verify YAML file
-        run: ls -l ./src/ValentinGuigon_CV.yaml # Check if the ValentinGuigon_CV.yaml file exists and its details
-
-      - name: Commit files
-        id: commit
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "github-actions"
-          git add --all
-          if [-z "$(git status --porcelain)"]; then
-             echo "::set-output name=push::false"
-          else
-             git commit -m "Add changes" -a
-             echo "::set-output name=push::true"
-          fi
-        shell: bash
-
-      - name: Push changes
-        if: steps.commit.outputs.push == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.RELEASE_CV_TOKEN }}
+    uses: ./.github/workflows/convert.yaml
