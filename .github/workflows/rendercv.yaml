@@ -1,4 +1,4 @@
-name: Rendera CV
+name: Render a CV
 
 on:
   push:
