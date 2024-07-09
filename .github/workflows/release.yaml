@@ -10,3 +10,8 @@ jobs:
     uses: ./.github/workflows/convert.yaml
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
+
+  render_cv:
+    uses: ./.github/workflows/rendercv.yaml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
