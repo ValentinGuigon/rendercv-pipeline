@@ -5,26 +5,35 @@ on:
     branches:
       - main # Replace with your main branch name or use '*' for all branches
 
+permissions:
+  contents: write
+
 jobs:
-  convert_and_render:
-    name: Convert and Render CV
+  convert_json_to_yaml:
+    name: Converter
+    uses: ./.github/workflows/convert.yaml
+
+  call_rendercv_workflow:
+    name: RenderCV
+    needs: convert_json_to_yaml
+    uses: ./.github/workflows/rendercv.yaml
+
+  build:
+    needs: call_rendercv_workflow
     runs-on: ubuntu-latest
-    needs: convert
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-
-  convert:
-    name: Convert CV JSON to YAML
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger Convert Workflow
-        uses: ./.github/workflows/convert.yaml
-
-  render:
-    name: Render CV PDF
-    runs-on: ubuntu-latest
-    needs: convert
-    steps:
-      - name: Trigger RenderCV Workflow
-        uses: ./.github/workflows/rendercv.yaml
+      - name: Download RenderCV Output
+        uses: actions/download-artifact@v4
+        with:
+          name: RenderCV Output
+          path: rendercv_output
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            rendercv_output/*_CV.pdf
+            rendercv_output/*_CV.tex
+          generate_release_notes: true
+          make_latest: true
