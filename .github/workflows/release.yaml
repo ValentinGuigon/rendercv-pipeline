@@ -8,3 +8,5 @@ on:
 jobs:
   convert_json_to_yaml:
     uses: ./.github/workflows/convert.yaml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
