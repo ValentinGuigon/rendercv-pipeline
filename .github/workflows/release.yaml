@@ -2,7 +2,7 @@ name: Release a CV
 
 on:
   push:
-    tags:
+    branches:
       - main # Replace with your main branch name or use '*' for all branches
 
 permissions:
