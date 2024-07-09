@@ -15,15 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Convert JSON to YAML
-        id: json2yaml
-        uses: fabasoad/data-format-converter-action@v0
-        with:
-          input: "./src/resume.json"
-          from: "json"
-          to: "yaml"
-      - name: Save JSON to File
-        run: echo "${{ steps.yaml2json.outputs.output }}" > converted_file.json
+      - name: Call Convert Workflow
+        uses: ./.github/workflows/convert.yaml
 
   render_cv:
     name: RenderCV
@@ -34,8 +27,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Call RenderCV Workflow
         uses: ./.github/workflows/rendercv.yaml
-        with:
-          yaml_input_path: ${{ steps.json2yaml.outputs.output }}
 
   build:
     needs: render_cv

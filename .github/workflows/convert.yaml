@@ -1,0 +1,18 @@
+name: Convert
+
+on: push
+
+jobs:
+  converter:
+    name: Run converter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: fabasoad/data-format-converter-action@main
+        id: yaml2json
+        with:
+          input: "./src/resume.json"
+          from: "json"
+          to: "yaml"
+      - name: Print result
+        run: echo "${{ steps.yaml2json.outputs.output }}"
