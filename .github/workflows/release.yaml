@@ -11,3 +11,5 @@ permissions:
 jobs:
   convert_json_to_yaml:
     uses: ./.github/workflows/convert.yaml
+    with:
+      github_token: ${{ secrets.RELEASE_CV_TOKEN }}
