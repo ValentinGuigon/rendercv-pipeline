@@ -9,31 +9,14 @@ permissions:
   contents: write
 
 jobs:
-  convert_json_to_yaml:
-    name: Converter
-    uses: ./.github/workflows/convert.yaml
-
-  call_rendercv_workflow:
-    name: RenderCV
-    needs: convert_json_to_yaml
-    uses: ./.github/workflows/rendercv.yaml
-
-  build:
-    needs: call_rendercv_workflow
+  test_workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Download RenderCV Output
-        uses: actions/download-artifact@v4
+      - uses: fabasoad/data-format-converter-action@v0
+        id: yaml2json
         with:
-          name: RenderCV Output
-          path: rendercv_output
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            rendercv_output/*_CV.pdf
-            rendercv_output/*_CV.tex
-          generate_release_notes: true
-          make_latest: true
+          input: "docker-compose.yml"
+          from: "yaml"
+          to: "json"
+      - name: Print result
+        run: echo "${{ steps.yaml2json.outputs.output }}"
