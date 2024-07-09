@@ -15,4 +15,4 @@ jobs:
           from: "json"
           to: "yaml"
       - name: Print result
-        run: echo "${{ steps.yaml2json.outputs.output }}"
+        run: echo "${{ steps.yaml2json.outputs.output }}" > ./src/resume.yaml
