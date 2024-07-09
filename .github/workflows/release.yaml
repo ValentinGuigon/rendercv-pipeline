@@ -9,4 +9,4 @@ jobs:
   convert_json_to_yaml:
     uses: ./.github/workflows/convert.yaml
     secrets:
-      token: ${{ secrets.RELEASE_CV_TOKEN }}
+      token: ${{ secrets.GITHUB_TOKEN  }}
