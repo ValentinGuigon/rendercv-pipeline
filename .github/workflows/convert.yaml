@@ -58,4 +58,5 @@ jobs:
         if: steps.commit.outputs.push == 'true'
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.token }}
+          github_token: ${{ secrets.RELEASE_CV_TOKEN }}
+          branch: main
