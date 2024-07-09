@@ -9,40 +9,38 @@ permissions:
   contents: write
 
 jobs:
-  rendercv:
-    name: RenderCV
+  converter:
+    name: Converter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Install RenderCV
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Ensure src directory exists
+        run: mkdir -p ./src
+
+      - name: Check if ValentinGuigon_CV.yaml exists and delete it
         run: |
-          pip install -r requirements.txt
-      - name: RenderCV
-        run: |
-          cd src
-          cv_file=$(find .  -maxdepth 1 -type f -name "*_CV.yaml" | head -n 1)
-          if [ -z "$cv_file" ]; then
-            echo "No RenderCV file found!"
-            exit 1
+          if [ -f ./src/ValentinGuigon_CV.yaml ]; then
+            rm ./src/ValentinGuigon_CV.yaml
+            echo "Existing ValentinGuigon_CV.yaml file deleted."
+          else
+            echo "No existing ValentinGuigon_CV.yaml file found."
           fi
-          cd ..
-          rendercv render src/$cv_file --pdf-path ${cv_file%.yaml}.pdf --markdown-path README.md --latex-path ${cv_file%.yaml}.tex
-      - name: Upload rendercv_output as an artifact
-        uses: actions/upload-artifact@v4
+
+      - name: Convert JSON to YAML
+        uses: fabasoad/data-format-converter-action@v0
+        id: json2yaml
         with:
-          name: RenderCV Output
-          path: rendercv_output
-      - uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          base: HEAD
-          filters: |
-            cv:
-              - '*_CV.tex'
-              - 'README.md'
+          input: "./src/ValentinGuigon_CV.json"
+          from: "json"
+          to: "yaml"
+
+      - name: Save YAML to File
+        run: echo "${{ steps.json2yaml.outputs.output }}" > ./src/ValentinGuigon_CV.yaml
+
+      - name: Verify YAML file
+        run: ls -l ./src/ValentinGuigon_CV.yaml # Check if the ValentinGuigon_CV.yaml file exists and its details
 
       - name: Commit files
         id: commit
