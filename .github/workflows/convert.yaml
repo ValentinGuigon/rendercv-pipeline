@@ -17,15 +17,15 @@ jobs:
         run: mkdir -p ./src
 
       - name: Convert JSON to YAML
+        uses: fabasoad/data-format-converter-action@v0
         id: json2yaml
-        uses: fabasoad/data-format-converter-action@main
         with:
           input: "./src/ValentinGuigon_CV.json"
           from: "json"
           to: "yaml"
 
       - name: Save YAML to File
-        run: echo "${{ steps.yaml2json.outputs.output }}" > ./src/ValentinGuigon_CV.yaml
+        run: echo "${{ steps.json2yaml.outputs.output }}" > ./src/ValentinGuigon_CV.yaml
 
       - name: Verify YAML file
         run: ls -l ./src/ValentinGuigon_CV.yaml # Check if the ValentinGuigon_CV.yaml file exists and its details
