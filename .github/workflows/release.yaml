@@ -9,14 +9,23 @@ permissions:
   contents: write
 
 jobs:
-  convert_json_to_yaml:
+  converter:
+    name: Converter
     runs-on: ubuntu-latest
     steps:
-      - uses: fabasoad/data-format-converter-action@main
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Ensure src directory exists
+        run: mkdir -p ./src
+
+      - name: Convert JSON to YAML
+        uses: fabasoad/data-format-converter-action@v0
         id: json2yaml
         with:
           input: "./src/ValentinGuigon_CV.json"
           from: "json"
           to: "yaml"
-      - name: Print result
+
+      - name: Save YAML to File
         run: echo "${{ steps.json2yaml.outputs.output }}"
