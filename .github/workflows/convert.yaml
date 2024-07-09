@@ -20,7 +20,7 @@ jobs:
         id: yaml2json
         uses: fabasoad/data-format-converter-action@main
         with:
-          input: "./src/resume.json"
+          input: "./src/ValentinGuigon_CV.json"
           from: "json"
           to: "yaml"
 
@@ -28,4 +28,4 @@ jobs:
         run: echo "${{ steps.yaml2json.outputs.output }}" > ./src/resume.yaml
 
       - name: Verify YAML file
-        run: ls -l ./src/resume.yaml # Check if the resume.yaml file exists and its details
+        run: ls -l ./src/ValentinGuigon_CV.yaml # Check if the ValentinGuigon_CV.yaml file exists and its details

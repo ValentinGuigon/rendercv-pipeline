@@ -11,13 +11,11 @@
             "module": "rendercv",
             "args": [
                 "render",
-                "src/resume.yml", // Updated to use the YAML file
+                "ValentinGuigon_CV.yaml",
                 "--pdf-path",
-                "resume.pdf", // Adjusted output PDF name
+                "ValentinGuigon_CV.pdf",
                 "--markdown-path",
-                "README.md",
-                "--latex-path",
-                "resume.tex" // Added LaTeX output path
+                "README.md"
             ]
         }
     ]

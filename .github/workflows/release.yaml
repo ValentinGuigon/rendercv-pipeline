@@ -18,18 +18,13 @@ jobs:
       - name: Call Convert Workflow
         uses: ./.github/workflows/convert.yaml
 
-  render_cv:
+  call_rendercv_workflow:
     name: RenderCV
     needs: convert_json_to_yaml
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Call RenderCV Workflow
-        uses: ./.github/workflows/rendercv.yaml
+    uses: ./.github/workflows/rendercv.yaml
 
   build:
-    needs: render_cv
+    needs: call_rendercv_workflow
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
