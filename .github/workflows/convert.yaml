@@ -1,7 +1,7 @@
 name: Convert JSON to YAML
 
 on:
-  workflow_call: # to make the workflow triggerable from other workflows (release.yaml)
+  workflow_call: # to make the workflow triggerable from other workflows
 
 permissions:
   contents: write
@@ -39,3 +39,23 @@ jobs:
 
       - name: Verify YAML file
         run: ls -l ./src/ValentinGuigon_CV.yaml # Check if the ValentinGuigon_CV.yaml file exists and its details
+
+      - name: Commit files
+        id: commit
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions"
+          git add --all
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "::set-output name=push::false"
+          else
+            git commit -m "Add changes" -a
+            echo "::set-output name=push::true"
+          fi
+        shell: bash
+
+      - name: Push changes
+        if: steps.commit.outputs.push == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.RELEASE_CV_TOKEN }}
