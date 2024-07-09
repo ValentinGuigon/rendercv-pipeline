@@ -1,10 +1,12 @@
-name: Convert
+name: Release a CV
 
 on:
   push:
     branches:
-      - main
-  workflow_call: # to make the workflow triggerable from other workflows (release.yaml)
+      - main # Replace with your main branch name or use '*' for all branches
+
+permissions:
+  contents: write
 
 jobs:
   converter:
