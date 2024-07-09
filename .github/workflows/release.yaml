@@ -10,13 +10,8 @@ permissions:
 
 jobs:
   convert_json_to_yaml:
-    name: Convert JSON to YAML
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Call Convert Workflow
-        uses: ./.github/workflows/convert.yaml
+    name: Converter
+    uses: ./.github/workflows/convert.yaml
 
   call_rendercv_workflow:
     name: RenderCV

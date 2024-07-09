@@ -4,10 +4,14 @@ on:
   push:
     branches:
       - main
+  workflow_call: # to make the workflow triggerable from other workflows (release.yaml)
+
+permissions:
+  contents: write
 
 jobs:
   converter:
-    name: Run converter
+    name: Converter
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
