@@ -19,7 +19,7 @@ jobs:
         id: json2yaml
         uses: fabasoad/data-format-converter-action@v0
         with:
-          input: "src/resume.json"
+          input: "./src/resume.json"
           from: "json"
           to: "yaml"
 
