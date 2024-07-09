@@ -11,8 +11,9 @@ jobs:
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
 
-  render_cv:
-    uses: ./.github/workflows/rendercv.yaml
+  call_rendercv_workflow:
+    name: RenderCV
     needs: convert_json_to_yaml
+    uses: ./.github/workflows/rendercv.yaml
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
