@@ -25,7 +25,7 @@ jobs:
           to: "yaml"
 
       - name: Save YAML to File
-        run: echo "${{ steps.yaml2json.outputs.output }}" > ./src/resume.yaml
+        run: echo "${{ steps.yaml2json.outputs.output }}" > ./src/ValentinGuigon_CV.yaml
 
       - name: Verify YAML file
         run: ls -l ./src/ValentinGuigon_CV.yaml # Check if the ValentinGuigon_CV.yaml file exists and its details
