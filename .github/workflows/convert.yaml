@@ -6,9 +6,6 @@ on:
       - main
   workflow_call: # to make the workflow triggerable from other workflows (release.yaml)
 
-permissions:
-  contents: write
-
 jobs:
   converter:
     name: Converter
@@ -33,3 +30,11 @@ jobs:
 
       - name: Verify YAML file
         run: ls -l ./src/ValentinGuigon_CV.yaml # Check if the ValentinGuigon_CV.yaml file exists and its details
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions"
+          git add ./src/ValentinGuigon_CV.yaml
+          git commit -m "Convert JSON to YAML and add ValentinGuigon_CV.yaml"
+          git push origin main
