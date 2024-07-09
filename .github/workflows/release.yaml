@@ -12,3 +12,5 @@ jobs:
   convert_json_to_yaml:
     name: Converter
     uses: ./.github/workflows/convert.yaml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}

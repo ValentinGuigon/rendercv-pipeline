@@ -2,6 +2,9 @@ name: Convert JSON to YAML
 
 on:
   workflow_call: # to make the workflow triggerable from other workflows (release.yaml)
+    secrets:
+      token:
+        required: true
 
 permissions:
   contents: write
