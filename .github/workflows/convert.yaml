@@ -1,18 +1,31 @@
 name: Convert
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   converter:
     name: Run converter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
-      - uses: fabasoad/data-format-converter-action@main
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Ensure src directory exists
+        run: mkdir -p ./src
+
+      - name: Convert JSON to YAML
         id: yaml2json
+        uses: fabasoad/data-format-converter-action@main
         with:
           input: "./src/resume.json"
           from: "json"
           to: "yaml"
-      - name: Print result
+
+      - name: Save YAML to File
         run: echo "${{ steps.yaml2json.outputs.output }}" > ./src/resume.yaml
+
+      - name: Verify YAML file
+        run: ls -l ./src/resume.yaml # Check if the resume.yaml file exists and its details
