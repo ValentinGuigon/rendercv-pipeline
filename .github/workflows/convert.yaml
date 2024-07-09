@@ -1,9 +1,6 @@
 name: Convert JSON to YAML
 
 on:
-  push:
-    branches:
-      - main # Replace with your main branch name or use '*' for all branches
   workflow_call: # to make the workflow triggerable from other workflows (release.yaml)
 
 permissions:
@@ -19,6 +16,15 @@ jobs:
 
       - name: Ensure src directory exists
         run: mkdir -p ./src
+
+      - name: Check if ValentinGuigon_CV.yaml exists and delete it
+        run: |
+          if [ -f ./src/ValentinGuigon_CV.yaml ]; then
+            rm ./src/ValentinGuigon_CV.yaml
+            echo "Existing ValentinGuigon_CV.yaml file deleted."
+          else
+            echo "No existing ValentinGuigon_CV.yaml file found."
+          fi
 
       - name: Convert JSON to YAML
         uses: fabasoad/data-format-converter-action@v0
