@@ -1,10 +1,10 @@
 name: Render a CV
 
 on:
-  workflow_call: # to make the workflow triggerable from other workflows (release.yaml)
-
-permissions:
-  contents: write
+  workflow_call:
+    secrets:
+      token:
+        required: true
 
 jobs:
   rendercv:
@@ -15,9 +15,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Install RenderCV
         run: |
           pip install -r requirements.txt
+
       - name: RenderCV
         run: |
           cd src
@@ -28,11 +30,13 @@ jobs:
           fi
           cd ..
           rendercv render src/$cv_file --pdf-path ${cv_file%.yaml}.pdf --markdown-path README.md --latex-path ${cv_file%.yaml}.tex
+
       - name: Upload rendercv_output as an artifact
         uses: actions/upload-artifact@v4
         with:
           name: RenderCV Output
           path: rendercv_output
+
       - uses: dorny/paths-filter@v3
         id: changes
         with:

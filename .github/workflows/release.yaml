@@ -13,5 +13,6 @@ jobs:
 
   render_cv:
     uses: ./.github/workflows/rendercv.yaml
+    needs: convert_json_to_yaml
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
