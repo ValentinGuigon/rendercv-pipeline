@@ -1,4 +1,4 @@
-name: Release a CV
+name: Convert JSON to YAML
 
 on:
   push:
