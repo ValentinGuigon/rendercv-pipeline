@@ -31,10 +31,22 @@ jobs:
       - name: Verify YAML file
         run: ls -l ./src/ValentinGuigon_CV.yaml # Check if the ValentinGuigon_CV.yaml file exists and its details
 
-      - name: Commit and push changes
+      - name: Commit files
+        id: commit
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "github-actions"
-          git add ./src/ValentinGuigon_CV.yaml
-          git commit -m "Convert JSON to YAML and add ValentinGuigon_CV.yaml"
-          git push origin main
+          git add --all
+          if [-z "$(git status --porcelain)"]; then
+             echo "::set-output name=push::false"
+          else
+             git commit -m "Add changes" -a
+             echo "::set-output name=push::true"
+          fi
+        shell: bash
+
+      - name: Push changes
+        if: steps.commit.outputs.push == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
