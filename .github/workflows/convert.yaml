@@ -17,7 +17,7 @@ jobs:
         run: mkdir -p ./src
 
       - name: Convert JSON to YAML
-        id: yaml2json
+        id: json2yaml
         uses: fabasoad/data-format-converter-action@main
         with:
           input: "./src/ValentinGuigon_CV.json"
