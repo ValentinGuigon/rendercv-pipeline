@@ -15,7 +15,7 @@ jobs:
       - uses: fabasoad/data-format-converter-action@v0
         id: json2yaml
         with:
-          input: "ValentinGuigon_CV.json"
+          input: "./src/ValentinGuigon_CV.json"
           from: "json"
           to: "yaml"
       - name: Print result
