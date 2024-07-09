@@ -4,17 +4,39 @@ on:
   push:
     tags:
       - "*" # Any tag pushed to the repository
-      
+
 permissions:
   contents: write
-  
+
 jobs:
-  call_rendercv_workflow:
+  convert_json_to_yaml:
+    name: Convert JSON to YAML
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Convert JSON to YAML
+        id: json2yaml
+        uses: fabasoad/data-format-converter-action@v0
+        with:
+          input: "src/resume.json"
+          from: "json"
+          to: "yaml"
+
+  render_cv:
     name: RenderCV
-    uses: ./.github/workflows/rendercv.yaml
+    needs: convert_json_to_yaml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Call RenderCV Workflow
+        uses: ./.github/workflows/rendercv.yaml
+        with:
+          yaml_input_path: ${{ steps.json2yaml.outputs.output }}
 
   build:
-    needs: call_rendercv_workflow
+    needs: render_cv
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

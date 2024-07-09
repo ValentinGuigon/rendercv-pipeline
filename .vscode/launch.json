@@ -11,11 +11,13 @@
             "module": "rendercv",
             "args": [
                 "render",
-                "John_Doe_CV.yaml",
+                "src/resume.yml", // Updated to use the YAML file
                 "--pdf-path",
-                "John_Doe_CV.pdf",
+                "resume.pdf", // Adjusted output PDF name
                 "--markdown-path",
-                "README.md"
+                "README.md",
+                "--latex-path",
+                "resume.tex" // Added LaTeX output path
             ]
         }
     ]
